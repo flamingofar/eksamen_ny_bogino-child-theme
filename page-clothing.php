@@ -71,6 +71,8 @@ get_header();
 
         // Filtre
         let filter = "Alle";
+        let filtre = {};
+
     
         const url = "http://bogino-nyt-til-eksamen.local/wp-json/wp/v2/produkt"
         const categoriesUrl = "http://bogino-nyt-til-eksamen.local/wp-json/wp/v2/kategori"
@@ -94,6 +96,9 @@ get_header();
                     categories = await catJSONData.json();
 
                     opretKnapper()
+                    console.log(filtre)
+
+
                     vis();
 
                     
@@ -158,15 +163,55 @@ get_header();
             categories.forEach((el, index) => {
                 // document.querySelector("#cat-filter").innerHTML +=`
                 // <button class="filter_btn" data-cat="${el.name}"> ${el.name} </button>`;   
+                let indexID = index + 1
+                document.querySelector("#cat-filter").innerHTML +=`
+                <label class="label_check" for="${indexID}"> ${el.name}
+                    <input name="check" type="checkbox" class="filter_check" id="${indexID}" data-filter="${indexID}"></input>
+                </label>
+                `;
+                       
             })
                     filterKnapEvents();
         }
         
         function filterKnapEvents(){
-            const filterBtn = document.querySelectorAll(".filter_btn")
-            filterBtn.forEach(el=>{
-                el.addEventListener("click", setFilter)
+            // const filterBtn = document.querySelectorAll(".filter_btn")
+            // filterBtn.forEach(el=>{
+            //     el.addEventListener("click", setFilter)
+            // })
+            
+            // EVENTLISTENER OG FYLDE FILTRE OBJECTET MED FILTRE BASERET PÅ KATEGORIERNE
+            const filterCheck = document.querySelectorAll(".filter_check")
+            filterCheck.forEach((filter, index) => {
+                filtre[`filter${categories[index].name}`] = "false";
+                
+
+                filter.addEventListener("change", checked)
             })
+        }
+
+        function checked() {
+            console.log("CHECKED")
+            switch(this.dataset.filter) {
+                case "1":
+                    filtre[0] = this.checked
+                    console.log("Filter 1: "+filtre[0])
+                    break;
+                case "2":
+                    filtre[1] = this.checked
+                    console.log("Filter 2: "+filtre[1])
+                    break;
+                case "3":
+                    filtre[2] = this.checked
+                    console.log("Filter 2: "+filtre[2])
+                    break;
+                case "4":
+                    filtre[3] = this.checked
+                    console.log("Filter 2: "+filtre[3])
+                    break;
+                default:
+                    return;
+                } 
         }
         
         function setFilter() {
