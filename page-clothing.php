@@ -35,7 +35,11 @@ get_header();
             <div id="filtrering" class="filtrering">
                 <h2>Filter <span class="arrow"></span> </h2>
                 <div id="cat-filter">
-                <button class="filter_btn valgt_tema" data-cat="Alle"> Alle </button>
+                <!-- <select>
+                    <option value="latest" selected>Latest</option>
+                    <option value="pris_ned">Price Acending</option>
+                    <option value="pris_op">Price Decending</option>
+                </select> -->
                 </div>
                 
             </div>
@@ -70,14 +74,23 @@ get_header();
         const catFilter = document.querySelector("#cat-filter");
 
         // Filtre
-        let filter = "Alle";
         let filtre = {};
+        let kategoriLabels = [];
+
+        
+         
 
     
         const url = "http://bogino-nyt-til-eksamen.local/wp-json/wp/v2/produkt"
         const categoriesUrl = "http://bogino-nyt-til-eksamen.local/wp-json/wp/v2/kategori"
 
         const bigPicLoopview = document.querySelector("#big_pic img");
+        // const sortSelect = document.querySelector("select");
+        // sortSelect.addEventListener("change", ()=>{
+        //     console.log(sortSelect.value)
+        // })
+                        
+                        
 
         let dataWP, categories;
 
@@ -95,8 +108,9 @@ get_header();
                     const catJSONData = await fetch(categoriesUrl);
                     categories = await catJSONData.json();
 
-                    opretKnapper()
-                    console.log(filtre)
+                    opretCheckboxe()
+                    getCategories()
+                    
 
 
                     vis();
@@ -106,6 +120,8 @@ get_header();
                     console.log(dataWP)
                     console.log(categories)
                 }
+
+                
 
                 //Vis alle elementerne
                 function vis() {
@@ -118,8 +134,12 @@ get_header();
 
                     
                     dataWP.forEach((el) => {
+                        // Objekters version af array[index] => filtre[Object.keys(filtre)[0]])
                         if (
-                        (filter == "Alle" || el.kategorier.includes(filter)) 
+                        (filtre[Object.keys(filtre)[0]] == true && el.kategorier.includes("Accessories")) ||
+                        (filtre[Object.keys(filtre)[1]] == true && el.kategorier.includes("Hoodies")) ||
+                        (filtre[Object.keys(filtre)[2]] == true && el.kategorier.includes("Outerwear")) ||
+                        (filtre[Object.keys(filtre)[3]] == true && el.kategorier.includes("T-shirts")) 
                         ) {
                         let klon = produktTemplate.cloneNode(true).content;
                         
@@ -156,18 +176,22 @@ get_header();
                         
                         }
                     })
+
+                    
                 }
+
                 
-                // ----------- OPRET KNAPPER ----------- //
-        function opretKnapper() {
+                
+                // ----------- OPRET CHECKBOX ----------- //
+        function opretCheckboxe() {
+            
             categories.forEach((el, index) => {
-                // document.querySelector("#cat-filter").innerHTML +=`
-                // <button class="filter_btn" data-cat="${el.name}"> ${el.name} </button>`;   
                 let indexID = index + 1
                 document.querySelector("#cat-filter").innerHTML +=`
-                <label class="label_check" for="${indexID}"> ${el.name}
-                    <input name="check" type="checkbox" class="filter_check" id="${indexID}" data-filter="${indexID}"></input>
-                </label>
+                <div>
+                    <input name="check" type="checkbox" class="filter_check" id="${indexID}" data-filter="${indexID}" ${el.name == "Hoodies" ? "checked" : "" }></input>
+                    <label class="label_check" for="${indexID}">${el.name}</label>
+                </div>
                 `;
                        
             })
@@ -175,15 +199,15 @@ get_header();
         }
         
         function filterKnapEvents(){
-            // const filterBtn = document.querySelectorAll(".filter_btn")
-            // filterBtn.forEach(el=>{
-            //     el.addEventListener("click", setFilter)
-            // })
-            
-            // EVENTLISTENER OG FYLDE FILTRE OBJECTET MED FILTRE BASERET PÅ KATEGORIERNE
+            // EVENTLISTENER OG FYLDE FILTRE OBJEKTET MED FILTRE BASERET PÅ KATEGORIERNE
             const filterCheck = document.querySelectorAll(".filter_check")
             filterCheck.forEach((filter, index) => {
-                filtre[`filter${categories[index].name}`] = "false";
+                if(filter.dataset.filter==2) {
+                    filtre[`filter${categories[1].name}`] = true;
+                } else {
+                    filtre[`filter${categories[index].name}`] = false;
+                }
+
                 
 
                 filter.addEventListener("change", checked)
@@ -191,46 +215,38 @@ get_header();
         }
 
         function checked() {
-            console.log("CHECKED")
-            switch(this.dataset.filter) {
-                case "1":
-                    filtre[0] = this.checked
-                    console.log("Filter 1: "+filtre[0])
-                    break;
-                case "2":
-                    filtre[1] = this.checked
-                    console.log("Filter 2: "+filtre[1])
-                    break;
-                case "3":
-                    filtre[2] = this.checked
-                    console.log("Filter 2: "+filtre[2])
-                    break;
-                case "4":
-                    filtre[3] = this.checked
-                    console.log("Filter 2: "+filtre[3])
-                    break;
-                default:
-                    return;
-                } 
-        }
-        
-        function setFilter() {
-            filter = this.dataset.cat;
-
-            document.querySelectorAll(".filter_btn").forEach(elm => {
-                elm.classList.remove("valgt_tema");
-            });
-
-        //tilføj .valgt til den valgte
-            this.classList.add("valgt_tema");
-            
+            // DYNAMISK
+            // Sætter property værdierne i filtre til true eller false efter om checkboxen er checked eller ikke
+            filtre[Object.keys(filtre)[`${this.dataset.filter - 1}`]] = this.checked
+            console.log(filtre)
             vis()
         }
         
+        // SORTÉR
+                
+        // function sorter() {
+        //     console.log("SORTERING")
+        //             if (sortSelect.value == "latest") {
+        //                 dataWP.sort((a, b) => (a.modified > b.modified ? 1 : -1));
+        //                 vis();
+        //             } else if(sortSelect.value == "pris_ned"){
+        //                 dataWP.sort((a, b) => (a.pris > b.pris ? 1 : -1));
+        //                 vis();
+        //             } else if(sortSelect.value == "pris_op"){
+        //                 dataWP.sort((a, b) => (a.pris > b.pris ? 1 : -1));
+        //                 vis();
+        //             }
+        //         }
 
-        
+        // Henter kategorierne og putter dem i kategoriLabels arrayet
+        function getCategories() {
+            categories.forEach(el => {
+                kategoriLabels.push(el.namespace)
+            })
+        }
             
             loadJSON();
+            
             
     </script>
 
