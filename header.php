@@ -114,7 +114,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="login_content">
 			<div class="login_input">
 				<input type="text" placeholder="EMAIL" autocomplete="off">
-				<input type="password" placeholder="PASSEWORD" autocomplete="off">
+				<input type="password" placeholder="PASSWORD" autocomplete="off">
 				<button class="button_fill">Login</button>
 			</div>	
 			<div class="divider">

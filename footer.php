@@ -66,7 +66,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		// POPUP HANDLER CART DESKTOP
 		const deskCart = document.querySelector(".cart_icon-desktop")
 		deskCart.addEventListener("click", ()=>{
-			console.log("HEEJ")
 			cartPopup.classList.remove("hide")
 			cartPopupOverlay.classList.remove("hide")
 		})
@@ -78,7 +77,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		const loginPopup = document.querySelector(".login_popup")
 		const profilePopupOverlay = document.querySelector(".profile_container-overlay")
 		
-		console.log(profileBtn)
 
 		lukProfile.addEventListener("click", ()=>{
 			loginPopup.classList.add("hide")
@@ -109,7 +107,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		 const burgerMenu = document.querySelector
 		 (".mobile_nav");
         burger.addEventListener("click", ()=>{
-            console.log("hej")
 			burgerStreg1.classList.toggle("active");
 			burgerStreg2.classList.toggle("active");
 			burgerStreg3.classList.toggle("active");

@@ -30,8 +30,7 @@ h3 {
 	color: var(--white);
 }
 
-body,
-select {
+body {
 	font-family: "Karla", sans-serif;
 	color: var(--white);
 	text-decoration: none;
@@ -221,6 +220,14 @@ button:hover {
 	max-height: 0;
 	opacity: 0;
 	pointer-events: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
+}
+#cat-filter div {
+	width: 50%;
 }
 #cat-filter .box {
 	cursor: pointer;
@@ -234,17 +241,27 @@ button:hover {
 	pointer-events: all;
 }
 
-/* input[type="checkbox"] {
+input[type="checkbox"] {
 	position: relative;
 	overflow: hidden;
-}
-.filter_label {
+	appearance: none;
+	display: none;
+
 	cursor: pointer;
 }
-input[type="checkbox"]:checked + .filter_label {
-	border: 2px solid white;
-	background: pink;
-} */
+.label_check {
+	width: 100%;
+	padding: 0 0.7rem;
+	width: 40%;
+	font-size: clamp(1rem, 0.625rem + 1.6667vw, 1.5rem);
+	cursor: pointer;
+
+	border: 2px solid var(--white);
+}
+input[type="checkbox"]:checked + label {
+	color: var(--primary);
+	background: var(--white);
+}
 
 .loopview_container {
 	position: relative;
@@ -624,6 +641,8 @@ footer {
 		display: none;
 	}
 
+	/*----------------------------- FILTRERING -----------------------------*/
+
 	.filter_container {
 		margin-top: 1rem;
 		display: flex;
@@ -697,15 +716,17 @@ footer {
 	}
 
 	#cat-filter {
-		display: flex;
-		flex-direction: column;
+		margin: 0;
+		padding: 0;
 		max-height: 100rem;
 		opacity: 1;
 		margin: 0;
-		margin-left: 1.2rem;
 	}
 	#cat-filter h3 {
 		font-size: 1.3rem;
+	}
+	.label_check {
+		font-size: clamp(1rem, 0.55rem + 0.8571vw, 1.3rem);
 	}
 
 	/*----------------------------- MENU -----------------------------*/
@@ -843,11 +864,6 @@ footer {
 	.single_info_container h2 {
 		font-size: 2.8rem;
 	}
-	.single_info_container select {
-		background: var(--white);
-		color: var(--text);
-		border-bottom-color: var(--text);
-	}
 
 	.single_produkt_container {
 		position: relative;
@@ -870,4 +886,8 @@ footer {
 	.colour_container {
 		padding-block: 0.7rem;
 	}
+}
+
+select {
+	all: unset;
 }
