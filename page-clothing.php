@@ -110,6 +110,8 @@ get_header();
 
                     opretCheckboxe()
                     getCategories()
+
+                    dynamiskFiltrering()
                     
 
 
@@ -134,47 +136,87 @@ get_header();
 
                     
                     dataWP.forEach((el) => {
-                        // Objekters version af array[index] => filtre[Object.keys(filtre)[0]])
-                        if (
-                        (filtre[Object.keys(filtre)[0]] == true && el.kategorier.includes("Accessories")) ||
-                        (filtre[Object.keys(filtre)[1]] == true && el.kategorier.includes("Hoodies")) ||
-                        (filtre[Object.keys(filtre)[2]] == true && el.kategorier.includes("Outerwear")) ||
-                        (filtre[Object.keys(filtre)[3]] == true && el.kategorier.includes("T-shirts")) 
-                        ) {
-                        let klon = produktTemplate.cloneNode(true).content;
+
+                        for (i = 0; i < kategoriLabels.length; i++) {
+                            if(filtre[Object.keys(filtre)[i]] == true) {
+                                if(el.kategorier.includes(`${kategoriLabels[i]}`)){
+                                    // Filtrering her
+                                    let klon = produktTemplate.cloneNode(true).content;
                         
                         
-                        klon.querySelector(".titel").textContent = el.titel;
-                        if(el.produkt_billede) {
-                            klon.querySelector("img").src = el.produkt_billede[0].guid;
+                                    klon.querySelector(".titel").textContent = el.titel;
+                                    if(el.produkt_billede) {
+                                        klon.querySelector("img").src = el.produkt_billede[0].guid;
+                                    }
+                                    klon.querySelector(".pris").textContent = `${el.pris} kr.`;
+
+                                    klon
+                                        .querySelector("button")
+                                        .addEventListener("click", () => {
+                                        location.href = el.link
+                                            });
+                                    // Klikbart billede
+                                    klon
+                                        .querySelector(".img_container")
+                                        .addEventListener("click", () => {
+                                        location.href = el.link
+                                            });
+
+                                    // JS Hover for billede
+                                    klon.querySelector(".product_container").addEventListener("mouseenter", (e)=>{
+                                        bigPicLoopview.src = el.produkt_billede[0].guid;
+                                    })
+                                    // klon.querySelector(".product_container").addEventListener("mouseleave", (e)=>{
+                                    //     bigPicLoopview.src = "<?php echo get_stylesheet_directory_uri() ?>/assets/bogino_logo.png";
+                                    // })
+
+                                    //Appender alle elementerne
+                                    container.appendChild(klon);
+                                }
+                            }
                         }
-                        klon.querySelector(".pris").textContent = `${el.pris} kr.`;
+                        
+                        // // Objekters version af array[index] => filtre[Object.keys(filtre)[0]])
+                        // if (
+                        // (filtre[Object.keys(filtre)[0]] == true && el.kategorier.includes("Accessories")) ||
+                        // (filtre[Object.keys(filtre)[1]] == true && el.kategorier.includes("Hoodies")) ||
+                        // (filtre[Object.keys(filtre)[2]] == true && el.kategorier.includes("Outerwear")) ||
+                        // (filtre[Object.keys(filtre)[3]] == true && el.kategorier.includes("T-shirts")) 
+                        // ) {
+                        // let klon = produktTemplate.cloneNode(true).content;
+                        
+                        
+                        // klon.querySelector(".titel").textContent = el.titel;
+                        // if(el.produkt_billede) {
+                        //     klon.querySelector("img").src = el.produkt_billede[0].guid;
+                        // }
+                        // klon.querySelector(".pris").textContent = `${el.pris} kr.`;
 
-                        klon
-                            .querySelector("button")
-                            .addEventListener("click", () => {
-                            location.href = el.link
-                                });
-                        // Klikbart billede
-                        klon
-                            .querySelector(".img_container")
-                            .addEventListener("click", () => {
-                            location.href = el.link
-                                });
+                        // klon
+                        //     .querySelector("button")
+                        //     .addEventListener("click", () => {
+                        //     location.href = el.link
+                        //         });
+                        // // Klikbart billede
+                        // klon
+                        //     .querySelector(".img_container")
+                        //     .addEventListener("click", () => {
+                        //     location.href = el.link
+                        //         });
 
-                        // JS Hover for billede
-                        klon.querySelector(".product_container").addEventListener("mouseenter", (e)=>{
-                            bigPicLoopview.src = el.produkt_billede[0].guid;
-                        })
-                        // klon.querySelector(".product_container").addEventListener("mouseleave", (e)=>{
-                        //     bigPicLoopview.src = "<?php echo get_stylesheet_directory_uri() ?>/assets/bogino_logo.png";
+                        // // JS Hover for billede
+                        // klon.querySelector(".product_container").addEventListener("mouseenter", (e)=>{
+                        //     bigPicLoopview.src = el.produkt_billede[0].guid;
                         // })
+                        // // klon.querySelector(".product_container").addEventListener("mouseleave", (e)=>{
+                            // bigPicLoopview.src = "<?php echo get_stylesheet_directory_uri() ?>/assets/bogino_logo.png";
+                        // // })
 
-                        //Appender alle elementerne
-                        container.appendChild(klon);
+                        // //Appender alle elementerne
+                        // container.appendChild(klon);
                         
                         
-                        }
+                        // }
                     })
 
                     
@@ -218,7 +260,6 @@ get_header();
             // DYNAMISK
             // Sætter property værdierne i filtre til true eller false efter om checkboxen er checked eller ikke
             filtre[Object.keys(filtre)[`${this.dataset.filter - 1}`]] = this.checked
-            console.log(filtre)
             vis()
         }
         
@@ -241,9 +282,10 @@ get_header();
         // Henter kategorierne og putter dem i kategoriLabels arrayet
         function getCategories() {
             categories.forEach(el => {
-                kategoriLabels.push(el.namespace)
+                kategoriLabels.push(el.name)
             })
         }
+
             
             loadJSON();
             
