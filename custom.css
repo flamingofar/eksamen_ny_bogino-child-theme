@@ -4,6 +4,39 @@
  * @format
  */
 
+/*----------------------------- SKELETON LOADING -----------------------------*/
+
+.skeleton {
+	opacity: 0.5;
+	animation: skeleton-loading 0.8s linear infinite alternate;
+}
+
+.skeleton-text {
+	margin-block-start: 1rem;
+	width: 80%;
+	height: 1rem;
+}
+.skeleton-filter {
+	width: 100%;
+	height: 1.5rem;
+}
+
+.skeleton-button {
+	display: inline-block;
+	margin-block-start: 1rem;
+	width: 100%;
+	height: 3rem;
+}
+
+@keyframes skeleton-loading {
+	0% {
+		background: hsl(200, 20%, 49%);
+	}
+	100% {
+		background: hsl(200, 20%, 62%);
+	}
+}
+
 /*----------------------------- Etablerende -----------------------------*/
 
 @import url("https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
@@ -890,4 +923,12 @@ footer {
 
 select {
 	all: unset;
+}
+
+/*----------------------------- SKELETON LOADING -----------------------------*/
+
+#cat-filter .skeleton-filter {
+	margin-inline-start: 4.5rem;
+	width: 100%;
+	height: 1.5rem;
 }

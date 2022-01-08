@@ -35,11 +35,11 @@ get_header();
             <div id="filtrering" class="filtrering">
                 <h2>Filter <span class="arrow"></span> </h2>
                 <div id="cat-filter">
-                <!-- <select>
-                    <option value="latest" selected>Latest</option>
-                    <option value="pris_ned">Price Acending</option>
-                    <option value="pris_op">Price Decending</option>
-                </select> -->
+                    
+
+                    <template id="template-filterbtns">
+                        <div class="skeleton skeleton-filter"></div>
+                    </template>
                 </div>
                 
             </div>
@@ -50,10 +50,10 @@ get_header();
                 <img src="<?php echo get_stylesheet_directory_uri() ?>/assets/bogino_logo.png" alt="">
             </div>
             <div id="loopview" class="loopview">
-                 
+            
                 
             </div>
-            <template>
+            <template id="template_product">
                  <div class="product_container">
                      <div class="img_container">
                         <img src="<?php echo get_stylesheet_directory_uri() ?>/assets/placeholder.jpg" alt="">
@@ -64,7 +64,19 @@ get_header();
                         <button>See piece</button>
                     </div>
                  </div>
-                </template>
+            </template>
+            <template id="template_skeleton">
+                <div class="product_container">  
+                    <div class="img_container skeleton">
+                        <img src="#" alt="">
+                    </div>
+                    <div class="info_container">
+                        <h3 class="titel skeleton skeleton-text"></h3>
+                        <p class="pris skeleton skeleton-text"></p>
+                        <button class="skeleton skeleton-button"></button>
+                    </div>
+                </div>
+            </template>
         </div>
     </section>
 
@@ -77,10 +89,6 @@ get_header();
         let filtre = {};
         let kategoriLabels = [];
 
-        
-         
-
-    
         const url = "http://bogino-nyt-til-eksamen.local/wp-json/wp/v2/produkt"
         const categoriesUrl = "http://bogino-nyt-til-eksamen.local/wp-json/wp/v2/kategori"
 
@@ -90,14 +98,24 @@ get_header();
         //     console.log(sortSelect.value)
         // })
                         
-                        
-
         let dataWP, categories;
-
         
         filterH2.addEventListener("click", ()=>{
             catFilter.classList.toggle("active")
         })
+
+        // LOAD SKELETON - PRODUCTS
+        const skeletonTemplate = document.querySelector("#template_skeleton");
+        const loopview = document.querySelector("#loopview");
+        for(let i = 0; i < 4; i++) {
+            loopview.append(skeletonTemplate.content.cloneNode(true))
+        }
+        // LOAD SKELETON - FILTER BUTTONS
+        const filterBtnSkeletonTemplate = document.querySelector("#template-filterbtns");
+        const catFilterSkeleton = document.querySelector("#cat-filter");
+        for(let i = 0; i < 4; i++) {
+            catFilterSkeleton.append(filterBtnSkeletonTemplate.content.cloneNode(true))
+        }
 
         //Rest API Call
                 async function loadJSON() {
@@ -110,8 +128,6 @@ get_header();
 
                     opretCheckboxe()
                     getCategories()
-
-                    dynamiskFiltrering()
                     
 
 
@@ -129,7 +145,7 @@ get_header();
                 function vis() {
                     const catFilter = document.querySelector("#cat-filter");
 
-                    const produktTemplate = document.querySelector("template");
+                    const produktTemplate = document.querySelector("#template_product");
                     const container = document.querySelector("#loopview")
 
                     container.textContent ="";
@@ -226,10 +242,11 @@ get_header();
                 
                 // ----------- OPRET CHECKBOX ----------- //
         function opretCheckboxe() {
-            
+            const catFilter = document.querySelector("#cat-filter")
+            catFilter.textContent ="";
             categories.forEach((el, index) => {
                 let indexID = index + 1
-                document.querySelector("#cat-filter").innerHTML +=`
+                catFilter.innerHTML +=`
                 <div>
                     <input name="check" type="checkbox" class="filter_check" id="${indexID}" data-filter="${indexID}" ${el.name == "Hoodies" ? "checked" : "" }></input>
                     <label class="label_check" for="${indexID}">${el.name}</label>
